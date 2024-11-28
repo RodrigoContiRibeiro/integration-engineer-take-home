@@ -9,6 +9,7 @@ const {
   fullTaskFieldsSchema,
   partialTaskFieldsSchema,
 } = require("./tasks/schemas");
+const { validateSchema } = require("./middlewares/validateSchema");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -26,42 +27,26 @@ app.get("/v1/tasks", (req, res, next) => {
   res.json(tasks);
 });
 
-app.post("/v1/tasks", (req, res, next) => {
-  const taskFields = req.body;
+app.post(
+  "/v1/tasks",
+  validateSchema(fullTaskFieldsSchema),
+  (req, res, next) => {
+    const taskFields = req.body;
 
-  const { error } = fullTaskFieldsSchema.validate(taskFields, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    res.status(400).json({
-      message: {
-        errorDetails: error.details,
-      },
-    });
-  } else {
     const newTask = tasksService.createTask(taskFields);
 
     res.json(newTask);
   }
-});
+);
 
 // TODO add not found id
-app.patch("/v1/tasks/:id", (req, res, next) => {
-  const taskIdToBeUpdated = req.params.id;
-  const taskFieldsToBeUpdated = req.body;
+app.patch(
+  "/v1/tasks/:id",
+  validateSchema(partialTaskFieldsSchema),
+  (req, res, next) => {
+    const taskIdToBeUpdated = req.params.id;
+    const taskFieldsToBeUpdated = req.body;
 
-  const { error } = partialTaskFieldsSchema.validate(taskFieldsToBeUpdated, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    res.status(400).json({
-      message: {
-        errorDetails: error.details,
-      },
-    });
-  } else {
     const newTasks = tasksService.updateTask(
       taskIdToBeUpdated,
       taskFieldsToBeUpdated
@@ -69,24 +54,15 @@ app.patch("/v1/tasks/:id", (req, res, next) => {
 
     res.json(newTasks);
   }
-});
+);
 
-// TODO create put
-app.put("/v1/tasks/:id", (req, res, next) => {
-  const taskIdToBeUpdated = req.params.id;
-  const taskFieldsToBeUpdated = req.body;
+app.put(
+  "/v1/tasks/:id",
+  validateSchema(fullTaskFieldsSchema),
+  (req, res, next) => {
+    const taskIdToBeUpdated = req.params.id;
+    const taskFieldsToBeUpdated = req.body;
 
-  const { error } = fullTaskFieldsSchema.validate(taskFieldsToBeUpdated, {
-    abortEarly: false,
-  });
-
-  if (error) {
-    res.status(400).json({
-      message: {
-        errorDetails: error.details,
-      },
-    });
-  } else {
     const newTasks = tasksService.updateTask(
       taskIdToBeUpdated,
       taskFieldsToBeUpdated
@@ -94,7 +70,7 @@ app.put("/v1/tasks/:id", (req, res, next) => {
 
     res.json(newTasks);
   }
-});
+);
 
 // TODO add not found id
 app.delete("/v1/tasks/:id", (req, res, next) => {
