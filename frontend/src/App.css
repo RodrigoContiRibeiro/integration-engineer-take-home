@@ -33,6 +33,38 @@
   }
 }
 
+h1 {
+  margin: 0 0 80px 0;
+  display: block;
+}
+
+h3 {
+  text-align: left;
+}
+
+form {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+
+  margin: 0 0 60px 0;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .card {
   padding: 2em;
 }

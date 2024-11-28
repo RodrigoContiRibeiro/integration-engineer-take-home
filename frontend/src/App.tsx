@@ -1,14 +1,26 @@
 import { useState, useEffect } from "react";
+import "./App.css";
 
-type Task = {
-  id: string;
+type TaskData = {
   title: string;
   description: string;
 };
 
+type Task = TaskData & {
+  id: string;
+};
+
+const getTaskDataFromFormSubmit = (evt: React.FormEvent<HTMLFormElement>) => {
+  evt.preventDefault();
+
+  const formData = new FormData(evt.target as HTMLFormElement);
+  const taskData = Object.fromEntries(formData.entries());
+
+  return taskData as TaskData;
+};
+
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [formData, setFormData] = useState({ title: "", description: "" });
 
   useEffect(() => {
     fetchTasks();
@@ -20,13 +32,13 @@ function App() {
     setTasks(tasks);
   };
 
-  const createTask = async () => {
+  const createTask = async (task: TaskData) => {
     const response = await fetch("http://localhost:8000/v1/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      body: JSON.stringify(task),
     });
     const newTask = await response.json();
     setTasks((prev) => {
@@ -47,6 +59,20 @@ function App() {
   return (
     <div>
       <h1>Task Management App</h1>
+      <div>
+        <h3>Create Task</h3>
+        <form
+          onSubmit={(evt) => {
+            const taskData = getTaskDataFromFormSubmit(evt);
+
+            createTask(taskData);
+          }}
+        >
+          <input type="text" placeholder="Title" name="title" />
+          <input type="text" placeholder="Description" name="description" />
+          <button type="submit">Create</button>
+        </form>
+      </div>
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
@@ -56,24 +82,6 @@ function App() {
           </li>
         ))}
       </ul>
-      <div>
-        <h2>Create Task</h2>
-        <input
-          type="text"
-          placeholder="Title"
-          value={formData.title}
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-        />
-        <input
-          type="text"
-          placeholder="Description"
-          value={formData.description}
-          onChange={(e) =>
-            setFormData({ ...formData, description: e.target.value })
-          }
-        />
-        <button onClick={createTask}>Create</button>
-      </div>
     </div>
   );
 }
