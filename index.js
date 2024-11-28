@@ -72,6 +72,29 @@ app.patch("/v1/tasks/:id", (req, res, next) => {
 });
 
 // TODO create put
+app.put("/v1/tasks/:id", (req, res, next) => {
+  const taskIdToBeUpdated = req.params.id;
+  const taskFieldsToBeUpdated = req.body;
+
+  const { error } = fullTaskFieldsSchema.validate(taskFieldsToBeUpdated, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    res.status(400).json({
+      message: {
+        errorDetails: error.details,
+      },
+    });
+  } else {
+    const newTasks = tasksService.updateTask(
+      taskIdToBeUpdated,
+      taskFieldsToBeUpdated
+    );
+
+    res.json(newTasks);
+  }
+});
 
 // TODO add not found id
 app.delete("/v1/tasks/:id", (req, res, next) => {
