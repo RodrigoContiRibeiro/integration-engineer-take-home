@@ -109,7 +109,7 @@ function App() {
               <Table.Row>
                 <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell />
+                <Table.ColumnHeaderCell width="64px" />
               </Table.Row>
             </Table.Header>
             <Table.Body>
