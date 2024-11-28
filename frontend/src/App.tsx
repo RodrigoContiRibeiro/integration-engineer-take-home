@@ -15,13 +15,13 @@ function App() {
   }, []);
 
   const fetchTasks = async () => {
-    const response = await fetch("http://localhost:8000/tasks");
+    const response = await fetch("http://localhost:8000/v1/tasks");
     const tasks = await response.json();
     setTasks(tasks);
   };
 
   const createTask = async () => {
-    const response = await fetch("http://localhost:8000/tasks", {
+    const response = await fetch("http://localhost:8000/v1/tasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -35,7 +35,7 @@ function App() {
   };
 
   const deleteTask = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/tasks/${id}`, {
+    const response = await fetch(`http://localhost:8000/v1/tasks/${id}`, {
       method: "DELETE",
     });
 

@@ -16,13 +16,13 @@ app.use(compression());
 
 app.disable("x-powered-by");
 
-app.get("/tasks", (req, res) => {
+app.get("/v1/tasks", (req, res) => {
   const tasks = tasksService.listTasks();
 
   res.json(tasks);
 });
 
-app.post("/tasks", (req, res) => {
+app.post("/v1/tasks", (req, res) => {
   const taskFields = req.body;
 
   const newTask = tasksService.createTask(taskFields);
@@ -30,7 +30,7 @@ app.post("/tasks", (req, res) => {
   res.json(newTask);
 });
 
-app.patch("/tasks/:id", (req, res) => {
+app.patch("/v1/tasks/:id", (req, res) => {
   const taskIdToBeUpdated = req.params.id;
   const taskFieldsToBeUpdated = req.body;
 
@@ -42,7 +42,7 @@ app.patch("/tasks/:id", (req, res) => {
   res.json(newTasks);
 });
 
-app.delete("/tasks/:id", (req, res) => {
+app.delete("/v1/tasks/:id", (req, res) => {
   const taskIdToBeDeleted = req.params.id;
 
   const newTasks = tasksService.deleteTask(taskIdToBeDeleted);
