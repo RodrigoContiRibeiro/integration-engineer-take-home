@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 
 const { tasksService } = require("./tasks/service");
 
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 8000;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(helmet());
+app.use(compression());
 
 app.disable("x-powered-by");
 
