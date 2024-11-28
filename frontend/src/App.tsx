@@ -79,8 +79,8 @@ function App() {
         </Heading>
       </Box>
       <Flex gap="6">
-        <Flex width="100%" maxWidth="300px" position="sticky" top="4">
-          <Box flexGrow="1">
+        <Flex width="100%" maxWidth="300px" align="start">
+          <Box flexGrow="1" position="sticky" top="4">
             <Card size="4">
               <Box pb="3">
                 <Heading size="5" as="h3">
