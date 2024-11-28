@@ -5,6 +5,10 @@ const helmet = require("helmet");
 const compression = require("compression");
 
 const { tasksService } = require("./tasks/service");
+const {
+  fullTaskFieldsSchema,
+  partialTaskFieldsSchema,
+} = require("./tasks/schemas");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -16,33 +20,61 @@ app.use(compression());
 
 app.disable("x-powered-by");
 
-app.get("/v1/tasks", (req, res) => {
+app.get("/v1/tasks", (req, res, next) => {
   const tasks = tasksService.listTasks();
 
   res.json(tasks);
 });
 
-app.post("/v1/tasks", (req, res) => {
+app.post("/v1/tasks", (req, res, next) => {
   const taskFields = req.body;
 
-  const newTask = tasksService.createTask(taskFields);
+  const { error } = fullTaskFieldsSchema.validate(taskFields, {
+    abortEarly: false,
+  });
 
-  res.json(newTask);
+  if (error) {
+    res.status(400).json({
+      message: {
+        errorDetails: error.details,
+      },
+    });
+  } else {
+    const newTask = tasksService.createTask(taskFields);
+
+    res.json(newTask);
+  }
 });
 
-app.patch("/v1/tasks/:id", (req, res) => {
+// TODO add not found id
+app.patch("/v1/tasks/:id", (req, res, next) => {
   const taskIdToBeUpdated = req.params.id;
   const taskFieldsToBeUpdated = req.body;
 
-  const newTasks = tasksService.updateTask(
-    taskIdToBeUpdated,
-    taskFieldsToBeUpdated
-  );
+  const { error } = partialTaskFieldsSchema.validate(taskFieldsToBeUpdated, {
+    abortEarly: false,
+  });
 
-  res.json(newTasks);
+  if (error) {
+    res.status(400).json({
+      message: {
+        errorDetails: error.details,
+      },
+    });
+  } else {
+    const newTasks = tasksService.updateTask(
+      taskIdToBeUpdated,
+      taskFieldsToBeUpdated
+    );
+
+    res.json(newTasks);
+  }
 });
 
-app.delete("/v1/tasks/:id", (req, res) => {
+// TODO create put
+
+// TODO add not found id
+app.delete("/v1/tasks/:id", (req, res, next) => {
   const taskIdToBeDeleted = req.params.id;
 
   const newTasks = tasksService.deleteTask(taskIdToBeDeleted);
