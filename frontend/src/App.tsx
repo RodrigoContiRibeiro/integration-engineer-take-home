@@ -58,13 +58,11 @@ function App() {
   };
 
   const deleteTask = async (id: string) => {
-    const response = await fetch(`http://localhost:8000/v1/tasks/${id}`, {
+    await fetch(`http://localhost:8000/v1/tasks/${id}`, {
       method: "DELETE",
     });
 
-    const newTasks = await response.json();
-
-    setTasks(newTasks);
+    setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
   const submitForm = (evt: FormEvent<HTMLFormElement>) => {
