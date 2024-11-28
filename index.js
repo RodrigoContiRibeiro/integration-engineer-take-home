@@ -23,6 +23,13 @@ app.use(compression());
 
 app.disable("x-powered-by");
 
+const getReqParams = (req) => req.params;
+
+const taskIdMiddlewares = [
+  validateSchema(taskIdSchema, getReqParams),
+  fetchTaskId(),
+];
+
 app.get("/v1/tasks", (req, res, next) => {
   const tasks = tasksService.listTasks();
 
@@ -37,21 +44,17 @@ app.post(
 
     const newTask = tasksService.createTask(taskFields);
 
-    res.json(newTask);
+    const newTaskLocation = `/v1/tasks/${newTask.id}`;
+
+    res.location(newTaskLocation).status(201).json(newTask);
   }
 );
-
-const getReqParams = (req) => req.params;
-const taskIdMiddlewares = [
-  validateSchema(taskIdSchema, getReqParams),
-  fetchTaskId(),
-];
 
 app.get("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
   // local data from fetchTaskId middleware
   const task = res.locals.task;
 
-  res.json(task);
+  res.status(200).json(task);
 });
 
 app.patch(
@@ -67,7 +70,7 @@ app.patch(
       taskFieldsToBeUpdated
     );
 
-    res.json(newTasks);
+    res.status(200).json(newTasks);
   }
 );
 
@@ -84,11 +87,10 @@ app.put(
       taskFieldsToBeUpdated
     );
 
-    res.json(newTasks);
+    res.status(200).json(newTasks);
   }
 );
 
-// TODO change return
 app.delete("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
   const taskIdToBeDeleted = req.params.id;
 
