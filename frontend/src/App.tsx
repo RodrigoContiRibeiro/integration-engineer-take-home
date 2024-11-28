@@ -72,7 +72,7 @@ function App() {
   };
 
   return (
-    <Container size="3">
+    <Container size="3" p="6">
       <Box pb="9">
         <Heading size="9" as="h1" align="center">
           Task Management App
