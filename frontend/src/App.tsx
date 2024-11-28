@@ -1,5 +1,16 @@
-import { useState, useEffect } from "react";
-import "./App.css";
+import { useState, useEffect, FormEvent } from "react";
+import {
+  Box,
+  Container,
+  IconButton,
+  Table,
+  Heading,
+  Flex,
+  Card,
+  TextField,
+  Button,
+} from "@radix-ui/themes";
+import { TrashIcon } from "@radix-ui/react-icons";
 
 type TaskData = {
   title: string;
@@ -56,33 +67,70 @@ function App() {
     setTasks(newTasks);
   };
 
-  return (
-    <div>
-      <h1>Task Management App</h1>
-      <div>
-        <h3>Create Task</h3>
-        <form
-          onSubmit={(evt) => {
-            const taskData = getTaskDataFromFormSubmit(evt);
+  const submitForm = (evt: FormEvent<HTMLFormElement>) => {
+    const taskData = getTaskDataFromFormSubmit(evt);
 
-            createTask(taskData);
-          }}
-        >
-          <input type="text" placeholder="Title" name="title" />
-          <input type="text" placeholder="Description" name="description" />
-          <button type="submit">Create</button>
-        </form>
-      </div>
-      <ul>
-        {tasks.map((task) => (
-          <li key={task.id}>
-            <h3>{task.title}</h3>
-            <p>{task.description}</p>
-            <button onClick={() => deleteTask(task.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    createTask(taskData);
+  };
+
+  return (
+    <Container size="3">
+      <Box pb="9">
+        <Heading size="9" as="h1" align="center">
+          Task Management App
+        </Heading>
+      </Box>
+      <Flex gap="6">
+        <Flex width="100%" maxWidth="300px">
+          <Card size="4">
+            <Box pb="3">
+              <Heading size="5" as="h3">
+                Create Task
+              </Heading>
+            </Box>
+            <Box>
+              <form onSubmit={submitForm}>
+                <Flex direction="column" gap="3">
+                  <TextField.Root size="3" placeholder="Title" name="title" />
+                  <TextField.Root
+                    size="3"
+                    placeholder="Description"
+                    name="description"
+                  />
+                  <Button size="3" type="submit">
+                    Create
+                  </Button>
+                </Flex>
+              </form>
+            </Box>
+          </Card>
+        </Flex>
+        <Box width="100%">
+          <Table.Root size="3">
+            <Table.Header>
+              <Table.Row>
+                <Table.ColumnHeaderCell>Title</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Description</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell />
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              {tasks.map((task) => (
+                <Table.Row key={task.id}>
+                  <Table.RowHeaderCell>{task.title}</Table.RowHeaderCell>
+                  <Table.Cell>{task.description}</Table.Cell>
+                  <Table.Cell width="64px" justify="center">
+                    <IconButton color="red" onClick={() => deleteTask(task.id)}>
+                      <TrashIcon width={16} height={16} />
+                    </IconButton>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Root>
+        </Box>
+      </Flex>
+    </Container>
   );
 }
 
