@@ -8,8 +8,10 @@ const { tasksService } = require("./tasks/service");
 const {
   fullTaskFieldsSchema,
   partialTaskFieldsSchema,
+  taskIdSchema,
 } = require("./tasks/schemas");
 const { validateSchema } = require("./middlewares/validateSchema");
+const { fetchTaskId } = require("./middlewares/fetchTaskId");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
@@ -39,9 +41,22 @@ app.post(
   }
 );
 
-// TODO add not found id
+const getReqParams = (req) => req.params;
+const taskIdMiddlewares = [
+  validateSchema(taskIdSchema, getReqParams),
+  fetchTaskId(),
+];
+
+app.get("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
+  // local data from fetchTaskId middleware
+  const task = res.locals.task;
+
+  res.json(task);
+});
+
 app.patch(
   "/v1/tasks/:id",
+  ...taskIdMiddlewares,
   validateSchema(partialTaskFieldsSchema),
   (req, res, next) => {
     const taskIdToBeUpdated = req.params.id;
@@ -58,6 +73,7 @@ app.patch(
 
 app.put(
   "/v1/tasks/:id",
+  ...taskIdMiddlewares,
   validateSchema(fullTaskFieldsSchema),
   (req, res, next) => {
     const taskIdToBeUpdated = req.params.id;
@@ -72,8 +88,8 @@ app.put(
   }
 );
 
-// TODO add not found id
-app.delete("/v1/tasks/:id", (req, res, next) => {
+// TODO change return
+app.delete("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
   const taskIdToBeDeleted = req.params.id;
 
   const newTasks = tasksService.deleteTask(taskIdToBeDeleted);
