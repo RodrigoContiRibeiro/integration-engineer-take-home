@@ -92,9 +92,9 @@ app.put(
 app.delete("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
   const taskIdToBeDeleted = req.params.id;
 
-  const newTasks = tasksService.deleteTask(taskIdToBeDeleted);
+  tasksService.deleteTask(taskIdToBeDeleted);
 
-  res.json(newTasks);
+  res.status(204).send();
 });
 
 app.listen(PORT, () => {
