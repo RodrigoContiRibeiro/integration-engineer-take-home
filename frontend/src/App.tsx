@@ -79,29 +79,31 @@ function App() {
         </Heading>
       </Box>
       <Flex gap="6">
-        <Flex width="100%" maxWidth="300px">
-          <Card size="4">
-            <Box pb="3">
-              <Heading size="5" as="h3">
-                Create Task
-              </Heading>
-            </Box>
-            <Box>
-              <form onSubmit={submitForm}>
-                <Flex direction="column" gap="3">
-                  <TextField.Root size="3" placeholder="Title" name="title" />
-                  <TextField.Root
-                    size="3"
-                    placeholder="Description"
-                    name="description"
-                  />
-                  <Button size="3" type="submit">
-                    Create
-                  </Button>
-                </Flex>
-              </form>
-            </Box>
-          </Card>
+        <Flex width="100%" maxWidth="300px" position="sticky" top="4">
+          <Box flexGrow="1">
+            <Card size="4">
+              <Box pb="3">
+                <Heading size="5" as="h3">
+                  Create Task
+                </Heading>
+              </Box>
+              <Box>
+                <form onSubmit={submitForm}>
+                  <Flex direction="column" gap="3">
+                    <TextField.Root size="3" placeholder="Title" name="title" />
+                    <TextField.Root
+                      size="3"
+                      placeholder="Description"
+                      name="description"
+                    />
+                    <Button size="3" type="submit">
+                      Create
+                    </Button>
+                  </Flex>
+                </form>
+              </Box>
+            </Card>
+          </Box>
         </Flex>
         <Box width="100%">
           <Table.Root size="3">
