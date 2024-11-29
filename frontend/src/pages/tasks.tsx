@@ -29,8 +29,12 @@ const Tasks: React.FC = () => {
   return (
     <PageContainer>
       <PageTitle>Task Management App</PageTitle>
-      <Flex gap="6">
-        <Flex width="100%" maxWidth="300px" align="start">
+      <Flex gap="6" direction={{ initial: "column", md: "row" }}>
+        <Flex
+          width="100%"
+          maxWidth={{ initial: "100%", md: "300px" }}
+          align="start"
+        >
           <Box flexGrow="1" position="sticky" top="4">
             <Card size="4">
               <Box pb="3">
