@@ -23,15 +23,17 @@ const tasksService = {
     return newTask;
   },
   updateTask: (id, newFields) => {
+    const taskToBeUpdated = tasks.find((task) => task.id === id);
+
+    const updatedTask = {
+      ...taskToBeUpdated,
+      ...newFields,
+    };
+
     const newTasks = tasks.map((task) => {
       const isTaskToBeUpdated = task.id === id;
 
       if (isTaskToBeUpdated) {
-        const updatedTask = {
-          ...task,
-          ...newFields,
-        };
-
         return updatedTask;
       }
 
@@ -40,7 +42,7 @@ const tasksService = {
 
     tasks = newTasks;
 
-    return tasks;
+    return updatedTask;
   },
   deleteTask: (id) => {
     const filteredTasks = tasks.filter((task) => task.id !== id);
