@@ -1,9 +1,10 @@
+import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Flex } from "@radix-ui/themes";
-import React from "react";
 import { FieldErrors, SubmitHandler, useForm } from "react-hook-form";
 import { TaskData, taskDataSchema } from "../../apis/tasksApi";
 import { FormInput } from "./form-input";
+import { delay } from "../../utils/delay";
 
 export type FormProps = {
   initialValues?: Partial<TaskData>;
@@ -43,6 +44,9 @@ export const TasksForm: React.FC<FormProps> = ({
     criteriaMode: "all",
   });
 
+  const [loadingSubmission, setLoadingSubmission] =
+    React.useState<boolean>(false);
+
   const hasErrors = hasFormErrors(errors);
 
   React.useEffect(() => {
@@ -50,15 +54,28 @@ export const TasksForm: React.FC<FormProps> = ({
   }, [reset, defaultValues, isSubmitSuccessful]);
 
   const onSubmit: SubmitHandler<TaskData> = async (taskData) => {
+    setLoadingSubmission(true);
+
+    await delay(1000);
+
     await submitFn(taskData);
+
+    setLoadingSubmission(false);
   };
+
+  const disabledSubmission = hasErrors || loadingSubmission;
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Flex direction="column" gap="3">
         <FormInput name="title" control={control} />
         <FormInput name="description" control={control} />
-        <Button size="3" type="submit" disabled={hasErrors}>
+        <Button
+          size="3"
+          type="submit"
+          disabled={disabledSubmission}
+          loading={loadingSubmission}
+        >
           Create
         </Button>
       </Flex>
