@@ -4,7 +4,6 @@ import { Button, Flex } from "@radix-ui/themes";
 import { FieldErrors, SubmitHandler, useForm } from "react-hook-form";
 import { TaskData, taskDataSchema } from "../../apis/tasksApi";
 import { FormInput } from "./form-input";
-import { delay } from "../../utils/delay";
 
 export type FormProps = {
   initialValues?: Partial<TaskData>;
@@ -55,8 +54,6 @@ export const TasksForm: React.FC<FormProps> = ({
 
   const onSubmit: SubmitHandler<TaskData> = async (taskData) => {
     setLoadingSubmission(true);
-
-    await delay(1000);
 
     await submitFn(taskData);
 

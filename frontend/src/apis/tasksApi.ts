@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { delay } from "../utils/delay";
 
 export const taskDataSchema = z.object({
   title: z.string().trim().min(1, "Required"),
@@ -23,12 +24,17 @@ const routes = {
   task: (id: string) => `${baseUrl}/tasks/${id}`,
 };
 
+const ONE_SECOND = 1000;
+const fakeDelay = async () => await delay(ONE_SECOND);
+
 const fetchTasks = async (): Promise<Tasks> => {
   const response = await fetch(routes.tasks);
 
   const resJson = await response.json();
 
   const tasks = taskListSchema.parse(resJson);
+
+  await fakeDelay();
 
   return tasks;
 };
@@ -47,6 +53,8 @@ const createTask = async (taskData: TaskData): Promise<Task> => {
   const resJson = await response.json();
 
   const newTask = taskSchema.parse(resJson);
+
+  await fakeDelay();
 
   return newTask;
 };
@@ -67,6 +75,8 @@ const editTask = async (id: TaskId, taskData: TaskData): Promise<Task> => {
 
   const newTask = taskSchema.parse(resJson);
 
+  await fakeDelay();
+
   return newTask;
 };
 
@@ -76,6 +86,8 @@ const deleteTask = async (id: string): Promise<void> => {
   await fetch(routes.task(taskId), {
     method: "DELETE",
   });
+
+  await fakeDelay();
 };
 
 export const tasksApi = {
