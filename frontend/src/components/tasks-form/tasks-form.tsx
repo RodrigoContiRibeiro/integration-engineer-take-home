@@ -24,7 +24,6 @@ export const TasksForm: React.FC<FormProps> = ({
   initialValues = DEFAULT_INITIAL_VALUES,
   submitFn,
 }) => {
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const defaultValues = React.useMemo<TaskData>(() => {
     return {
       title: initialValues.title ?? "",
