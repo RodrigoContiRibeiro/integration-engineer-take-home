@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 export const taskDataSchema = z.object({
-  title: z.string(),
-  description: z.string(),
+  title: z.string().trim().min(1, "Required"),
+  description: z.string().trim().min(1, "Required"),
 });
 export const taskIdSchema = z.string().uuid();
 export const taskSchema = taskDataSchema.extend({

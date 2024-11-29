@@ -1,17 +1,17 @@
 import React from "react";
 import { useTasks } from "../hooks/use-tasks";
 import { Box, Container, Heading, Flex, Card } from "@radix-ui/themes";
-import { FormTitle } from "../components/form/form-title";
-import { Form, RecordFormData } from "../components/form/form";
+import { FormTitle } from "../components/tasks-form/form-title";
+import { TasksForm } from "../components/tasks-form/tasks-form";
 import { TaskData } from "../apis/tasksApi";
 import { TasksTable } from "../components/tasks-table/tasks-table";
 
 const Tasks: React.FC = () => {
   const { tasks, createTask, deleteTask } = useTasks();
 
-  const submitForm = async (formData: RecordFormData) => {
+  const submitForm = async (formData: TaskData) => {
     // todo type conversion/coercion
-    createTask(formData as TaskData);
+    await createTask(formData as TaskData);
   };
 
   return (
@@ -29,7 +29,7 @@ const Tasks: React.FC = () => {
                 <FormTitle>Create Task</FormTitle>
               </Box>
               <Box>
-                <Form submitFn={submitForm} />
+                <TasksForm submitFn={submitForm} />
               </Box>
             </Card>
           </Box>
