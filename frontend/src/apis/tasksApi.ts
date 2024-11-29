@@ -65,8 +65,6 @@ const editTask = async (id: TaskId, taskData: TaskData): Promise<Task> => {
 
   const resJson = await response.json();
 
-  console.log("resJson", resJson);
-
   const newTask = taskSchema.parse(resJson);
 
   return newTask;
