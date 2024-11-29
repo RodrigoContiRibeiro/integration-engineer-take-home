@@ -1,11 +1,18 @@
-export type TaskData = {
-  title: string;
-  description: string;
-};
+import { z } from "zod";
 
-export type Task = TaskData & {
-  id: string;
-};
+export const taskDataSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+export const taskIdSchema = z.string().uuid();
+export const taskSchema = taskDataSchema.extend({
+  id: taskIdSchema,
+});
+export const taskListSchema = z.array(taskSchema);
+
+export type TaskData = z.infer<typeof taskDataSchema>;
+export type Task = z.infer<typeof taskSchema>;
+export type Tasks = z.infer<typeof taskListSchema>;
 
 const version = `v1`;
 const baseUrl = `http://localhost:8000/${version}`;
@@ -15,30 +22,38 @@ const routes = {
   task: (id: string) => `${baseUrl}/tasks/${id}`,
 };
 
-const fetchTasks = async (): Promise<Task[]> => {
+const fetchTasks = async (): Promise<Tasks> => {
   const response = await fetch(routes.tasks);
 
-  const tasks = (await response.json()) as Task[];
+  const resJson = await response.json();
+
+  const tasks = taskListSchema.parse(resJson);
 
   return tasks;
 };
 
 const createTask = async (taskData: TaskData): Promise<Task> => {
+  const parsedTaskData = taskDataSchema.parse(taskData);
+
   const response = await fetch(routes.tasks, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(taskData),
+    body: JSON.stringify(parsedTaskData),
   });
 
-  const newTask = (await response.json()) as Task;
+  const resJson = await response.json();
+
+  const newTask = taskSchema.parse(resJson);
 
   return newTask;
 };
 
 const deleteTask = async (id: string): Promise<void> => {
-  await fetch(routes.task(id), {
+  const taskId = taskIdSchema.parse(id);
+
+  await fetch(routes.task(taskId), {
     method: "DELETE",
   });
 };
