@@ -89,9 +89,9 @@ A task can be deleted through the remove button in the table:
 
 The project structure is as follows:
 
-The backend code is in the `index.js` file and the `backend` directory.
+- The backend code is in the `index.js` file and the `backend` directory.
 
-The frontend code is another project inside the `frontend` directory, it's bundled by Vite
+- The frontend code is another project inside the `frontend` directory, it's bundled by Vite
 
 ## Commands
 
@@ -125,13 +125,13 @@ To run the code in development mode:
 npm run dev
 ```
 
-To run build the code:
+To build the code:
 
 ```bash
 npm run build
 ```
 
-To run lint the code:
+To lint the code:
 
 ```bash
 npm run lint
