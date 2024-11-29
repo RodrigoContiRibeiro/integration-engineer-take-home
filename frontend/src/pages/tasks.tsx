@@ -1,26 +1,34 @@
 import React from "react";
 import { useTasks } from "../hooks/use-tasks";
-import { Box, Container, Heading, Flex, Card } from "@radix-ui/themes";
+import { Box, Flex, Card, Skeleton } from "@radix-ui/themes";
 import { FormTitle } from "../components/tasks-form/form-title";
 import { TasksForm } from "../components/tasks-form/tasks-form";
 import { TaskData } from "../apis/tasksApi";
 import { TasksTable } from "../components/tasks-table/tasks-table";
+import { PageTitle } from "../components/page-title/page-title";
+import PageContainer from "../components/page-container/page-container";
 
 const Tasks: React.FC = () => {
-  const { tasks, createTask, editTask, deleteTask } = useTasks();
+  const { tasks, isTasksLoading, createTask, editTask, deleteTask } =
+    useTasks();
 
   const submitForm = async (formData: TaskData) => {
     // todo type conversion/coercion
     await createTask(formData as TaskData);
   };
 
+  if (isTasksLoading) {
+    return (
+      <PageContainer>
+        <PageTitle>Task Management App</PageTitle>
+        <Skeleton height="600px" />
+      </PageContainer>
+    );
+  }
+
   return (
-    <Container size="3" p="6">
-      <Box pb="9">
-        <Heading size="9" as="h1" align="center">
-          Task Management App
-        </Heading>
-      </Box>
+    <PageContainer>
+      <PageTitle>Task Management App</PageTitle>
       <Flex gap="6">
         <Flex width="100%" maxWidth="300px" align="start">
           <Box flexGrow="1" position="sticky" top="4">
@@ -38,7 +46,7 @@ const Tasks: React.FC = () => {
           <TasksTable tasks={tasks} onDelete={deleteTask} onEdit={editTask} />
         </Box>
       </Flex>
-    </Container>
+    </PageContainer>
   );
 };
 
