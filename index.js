@@ -6,8 +6,8 @@ const compression = require("compression");
 
 const { tasksService } = require("./tasks/service");
 const {
-  fullTaskFieldsSchema,
-  partialTaskFieldsSchema,
+  fullTaskDataSchema,
+  partialTaskDataSchema,
   taskIdSchema,
 } = require("./tasks/schemas");
 const { validateSchema } = require("./middlewares/validateSchema");
@@ -23,10 +23,10 @@ app.use(compression());
 
 app.disable("x-powered-by");
 
-const getReqParams = (req) => req.params;
+const getIdParam = (req) => req.params.id;
 
 const taskIdMiddlewares = [
-  validateSchema(taskIdSchema, getReqParams),
+  validateSchema(taskIdSchema, getIdParam),
   fetchTaskId(),
 ];
 
@@ -36,19 +36,15 @@ app.get("/v1/tasks", (req, res, next) => {
   res.json(tasks);
 });
 
-app.post(
-  "/v1/tasks",
-  validateSchema(fullTaskFieldsSchema),
-  (req, res, next) => {
-    const taskFields = req.body;
+app.post("/v1/tasks", validateSchema(fullTaskDataSchema), (req, res, next) => {
+  const taskFields = req.body;
 
-    const newTask = tasksService.createTask(taskFields);
+  const newTask = tasksService.createTask(taskFields);
 
-    const newTaskLocation = `/v1/tasks/${newTask.id}`;
+  const newTaskLocation = `/v1/tasks/${newTask.id}`;
 
-    res.location(newTaskLocation).status(201).json(newTask);
-  }
-);
+  res.location(newTaskLocation).status(201).json(newTask);
+});
 
 app.get("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
   // local data from fetchTaskId middleware
@@ -60,7 +56,7 @@ app.get("/v1/tasks/:id", ...taskIdMiddlewares, (req, res, next) => {
 app.patch(
   "/v1/tasks/:id",
   ...taskIdMiddlewares,
-  validateSchema(partialTaskFieldsSchema),
+  validateSchema(partialTaskDataSchema),
   (req, res, next) => {
     const taskIdToBeUpdated = req.params.id;
     const taskFieldsToBeUpdated = req.body;
@@ -77,7 +73,7 @@ app.patch(
 app.put(
   "/v1/tasks/:id",
   ...taskIdMiddlewares,
-  validateSchema(fullTaskFieldsSchema),
+  validateSchema(fullTaskDataSchema),
   (req, res, next) => {
     const taskIdToBeUpdated = req.params.id;
     const taskFieldsToBeUpdated = req.body;

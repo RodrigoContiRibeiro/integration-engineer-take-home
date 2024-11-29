@@ -1,26 +1,27 @@
-const Joi = require("joi");
+const { z } = require("zod");
 
-const taskIdSchema = Joi.object({
-  id: Joi.string().guid(),
+const notEmptyZodObject = (zodObject) =>
+  zodObject.refine(
+    (arg) => {
+      const keysCount = Object.keys(arg).length;
+
+      const isObjectFilled = keysCount !== 0;
+
+      return isObjectFilled;
+    },
+    { message: "object should not be empty" }
+  );
+
+const taskDataSchema = z.object({
+  title: z.string().trim().min(1, "Required"),
+  description: z.string().trim().min(1, "Required"),
 });
-const fullTaskFieldsSchema = Joi.object({
-  title: Joi.string().required(),
-  description: Joi.string().required(),
-})
-  // not allow empty objects
-  .required()
-  .min(1)
-  .messages({ "object.min": "object should not be empty" });
-
-const partialTaskFieldsSchema = fullTaskFieldsSchema.fork(
-  Object.keys(fullTaskFieldsSchema.describe().keys),
-  (schema) => {
-    return schema.optional();
-  }
-);
+const fullTaskDataSchema = notEmptyZodObject(taskDataSchema);
+const partialTaskDataSchema = notEmptyZodObject(taskDataSchema.partial());
+const taskIdSchema = z.string().uuid();
 
 module.exports = {
   taskIdSchema,
-  fullTaskFieldsSchema,
-  partialTaskFieldsSchema,
+  fullTaskDataSchema,
+  partialTaskDataSchema,
 };

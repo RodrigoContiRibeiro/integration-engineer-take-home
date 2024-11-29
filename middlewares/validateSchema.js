@@ -2,18 +2,16 @@ const getReqBody = (req) => {
   return req.body;
 };
 
-const validateSchema = (joiSchema, getReqField = getReqBody) => {
+const validateSchema = (zodSchema, getReqField = getReqBody) => {
   return (req, res, next) => {
     const fieldsToValidate = getReqField(req);
 
-    const { error } = joiSchema.validate(fieldsToValidate, {
-      abortEarly: false,
-    });
+    const { error } = zodSchema.safeParse(fieldsToValidate);
 
     if (error) {
       res.status(400).json({
         message: {
-          errorDetails: error.details,
+          error: error,
         },
       });
     } else {
