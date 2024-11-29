@@ -12,6 +12,7 @@ export const taskListSchema = z.array(taskSchema);
 
 export type TaskData = z.infer<typeof taskDataSchema>;
 export type Task = z.infer<typeof taskSchema>;
+export type TaskId = z.infer<typeof taskIdSchema>;
 export type Tasks = z.infer<typeof taskListSchema>;
 
 const version = `v1`;
@@ -50,6 +51,27 @@ const createTask = async (taskData: TaskData): Promise<Task> => {
   return newTask;
 };
 
+const editTask = async (id: TaskId, taskData: TaskData): Promise<Task> => {
+  const parsedTaskId = taskIdSchema.parse(id);
+  const parsedTaskData = taskDataSchema.parse(taskData);
+
+  const response = await fetch(routes.task(parsedTaskId), {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(parsedTaskData),
+  });
+
+  const resJson = await response.json();
+
+  console.log("resJson", resJson);
+
+  const newTask = taskSchema.parse(resJson);
+
+  return newTask;
+};
+
 const deleteTask = async (id: string): Promise<void> => {
   const taskId = taskIdSchema.parse(id);
 
@@ -64,5 +86,6 @@ export const tasksApi = {
   routes,
   fetchTasks,
   createTask,
+  editTask,
   deleteTask,
 };

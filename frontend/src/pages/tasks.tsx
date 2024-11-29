@@ -7,7 +7,7 @@ import { TaskData } from "../apis/tasksApi";
 import { TasksTable } from "../components/tasks-table/tasks-table";
 
 const Tasks: React.FC = () => {
-  const { tasks, createTask, deleteTask } = useTasks();
+  const { tasks, createTask, editTask, deleteTask } = useTasks();
 
   const submitForm = async (formData: TaskData) => {
     // todo type conversion/coercion
@@ -35,7 +35,7 @@ const Tasks: React.FC = () => {
           </Box>
         </Flex>
         <Box width="100%">
-          <TasksTable tasks={tasks} onDelete={deleteTask} />
+          <TasksTable tasks={tasks} onDelete={deleteTask} onEdit={editTask} />
         </Box>
       </Flex>
     </Container>

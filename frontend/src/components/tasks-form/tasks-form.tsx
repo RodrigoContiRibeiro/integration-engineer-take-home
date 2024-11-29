@@ -6,6 +6,7 @@ import { TaskData, taskDataSchema } from "../../apis/tasksApi";
 import { FormInput } from "./form-input";
 
 export type FormProps = {
+  initialValues?: Partial<TaskData>;
   submitFn: (formData: TaskData) => Promise<void>;
 };
 
@@ -17,12 +18,20 @@ const hasFormErrors = (formErrors: FieldErrors<TaskData>) => {
   return hasErrors;
 };
 
-const defaultValues: TaskData = {
-  title: "",
-  description: "",
-};
+const DEFAULT_INITIAL_VALUES: TaskData = { title: "", description: "" };
 
-export const TasksForm: React.FC<FormProps> = ({ submitFn }) => {
+export const TasksForm: React.FC<FormProps> = ({
+  initialValues = DEFAULT_INITIAL_VALUES,
+  submitFn,
+}) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const defaultValues = React.useMemo<TaskData>(() => {
+    return {
+      title: initialValues.title ?? "",
+      description: initialValues.description ?? "",
+    };
+  }, [initialValues.title, initialValues.description]);
+
   const {
     reset,
     formState: { isSubmitSuccessful, errors },
@@ -38,7 +47,7 @@ export const TasksForm: React.FC<FormProps> = ({ submitFn }) => {
 
   React.useEffect(() => {
     reset(defaultValues);
-  }, [reset, isSubmitSuccessful]);
+  }, [reset, defaultValues, isSubmitSuccessful]);
 
   const onSubmit: SubmitHandler<TaskData> = async (taskData) => {
     await submitFn(taskData);
