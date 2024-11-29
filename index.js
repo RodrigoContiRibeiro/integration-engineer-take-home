@@ -4,14 +4,14 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 
-const { tasksService } = require("./tasks/service");
+const { tasksService } = require("./backend/tasks/service");
 const {
   fullTaskDataSchema,
   partialTaskDataSchema,
   taskIdSchema,
-} = require("./tasks/schemas");
-const { validateSchema } = require("./middlewares/validateSchema");
-const { fetchTaskId } = require("./middlewares/fetchTaskId");
+} = require("./backend/tasks/schemas");
+const { validateSchema } = require("./backend/middlewares/validateSchema");
+const { fetchTaskId } = require("./backend/middlewares/fetchTaskId");
 
 const app = express();
 const PORT = process.env.PORT || 8000;
