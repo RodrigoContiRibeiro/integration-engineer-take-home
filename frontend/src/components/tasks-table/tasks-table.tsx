@@ -16,12 +16,12 @@ export const TasksTable: React.FC<TasksTableProps> = ({
   onEdit,
 }) => {
   return (
-    <RadixTable.Root size="3">
+    <RadixTable.Root size={{ initial: "1", xs: "2", sm: "3" }}>
       <RadixTable.Header>
         <RadixTable.Row>
           <RadixTable.ColumnHeaderCell>Title</RadixTable.ColumnHeaderCell>
           <RadixTable.ColumnHeaderCell>Description</RadixTable.ColumnHeaderCell>
-          <RadixTable.ColumnHeaderCell width="64px" />
+          <RadixTable.ColumnHeaderCell width="104px" />
         </RadixTable.Row>
       </RadixTable.Header>
       <RadixTable.Body>
