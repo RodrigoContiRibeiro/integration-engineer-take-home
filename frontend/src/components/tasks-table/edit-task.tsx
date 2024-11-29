@@ -17,15 +17,17 @@ export const EditTask: React.FC<EditTaskProps> = ({ task, onSubmit }) => {
         </IconButton>
       </Dialog.Trigger>
       <Dialog.Content>
-        <Flex justify="end">
+        <Flex justify="between" align="center" mb="3">
+          <Dialog.Title mb="0">Edit Task</Dialog.Title>
           <Dialog.Close>
             <IconButton variant="soft" color="gray">
               <Cross1Icon width={16} height={16} />
             </IconButton>
           </Dialog.Close>
         </Flex>
-        <Dialog.Title>Edit Task</Dialog.Title>
-        <Dialog.Description>Make changes to this task.</Dialog.Description>
+        <Dialog.Description mb="3">
+          Make changes to this task.
+        </Dialog.Description>
         <TasksForm initialValues={task} submitFn={onSubmit} />
       </Dialog.Content>
     </Dialog.Root>
